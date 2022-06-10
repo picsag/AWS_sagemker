@@ -2,3 +2,5 @@ pandas
 matplotlib
 jupyter
 boto3
+xgboost
+scikit-learn
