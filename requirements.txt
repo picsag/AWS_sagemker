@@ -5,3 +5,4 @@ boto3
 xgboost
 scikit-learn
 sagemaker
+requests
