@@ -49,20 +49,8 @@ request = {
 }
 
 
-# In[ ]:
-
-
-request
-
-
-# In[ ]:
-
-
 response = requests.post(url, data=json.dumps(request))
 result = response.json()
-
-
-# In[ ]:
 
 
 if result['statusCode'] == 200:
@@ -70,9 +58,6 @@ if result['statusCode'] == 200:
     print('Predicted Count: ', predictions)
 else:
     print('Error',result['statusCode'], result['body'])
-
-
-# In[ ]:
 
 
 # Multiple Observations
@@ -100,13 +85,7 @@ request = {
 response = requests.post(url, data=json.dumps(request))
 
 
-# In[ ]:
-
-
 result = response.json()
-
-
-# In[ ]:
 
 
 if result['statusCode'] == 200:
