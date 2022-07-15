@@ -35,6 +35,7 @@ def lambda_handler(event, context):
         sentiment = client.detect_sentiment(Text=review[:4500], LanguageCode='en')
 
         print(sentiment['Sentiment'])
+        print('\n')
 
         payload['sentiment'] = sentiment['Sentiment']
 
