@@ -11,3 +11,7 @@ Click on one of the items below to go to the corresponding Python code:
 
 [AWS remote Model inference deployed using Sagemaker](/Integration/invoke_using_boto3_json.ipynb)
 
+[Principal Component Analysis using Scikit-learn](/PCA/correlated_data_pca_exploration.ipynb)
+
+[Scikit-learn Multi Layer Perceptron for Regression & Feature Transformer](/DeepLearning/bikerental_NN_sklearn.py)
+

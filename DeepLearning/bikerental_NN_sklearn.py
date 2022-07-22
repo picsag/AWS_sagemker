@@ -13,8 +13,8 @@ from sklearn.preprocessing import StandardScaler, OneHotEncoder, MinMaxScaler, K
 # Column Transformer
 from sklearn.compose import ColumnTransformer
 
-train_file = '../data/byke sharing/bike_train.csv'
-validation_file = '../data/byke sharing/bike_validation.csv'
+train_file = '../data/byke sharing/bike_train_log.csv'
+validation_file = '../data/byke sharing/bike_validation_log.csv'
 test_file = '../data/byke sharing/bike_test.csv'
 
 # One Hot Encode all Categorical Features
@@ -28,15 +28,15 @@ columns = ['count',  'season',  'holiday',  'workingday',   'weather',  'temp', 
            'year',  'month', 'day',  'dayofweek',  'hour']
 
 # Specify the column names as the file does not have column header
-df_train = pd.read_csv(train_file,names=columns)
+df_train = pd.read_csv(train_file, names=columns)
 df_validation = pd.read_csv(validation_file,names=columns)
 
 print(df_train.head())
 
 print(df_validation.head())
 
-X_train = df_train.iloc[:, 1:] # Features: 1st column onwards
-y_train = df_train.iloc[:, 0].ravel() # Target: 0th column
+X_train = df_train.iloc[:, 1:]  # Features: 1st column onwards
+y_train = df_train.iloc[:, 0].ravel()  # Target: 0th column
 
 X_validation = df_validation.iloc[:, 1:]
 y_validation = df_validation.iloc[:, 0].ravel()
@@ -73,6 +73,81 @@ nn_regressor = MLPRegressor(random_state=5,
                             max_iter=100)
 
 
+nn_regressor.fit(X_train_encoded, y_train)
 
-# print(X_train_encoded.head())
+# predict the count for validation data
+df = pd.read_csv(validation_file, names=columns)
+print(df.head())
+result = nn_regressor.predict(X_validation_encoded)
+df['count_predicted'] = result
+print(df.head())
+print(df['count_predicted'].describe())
+
+# Convert log(count) to count
+df['count'] = df['count'].map(np.expm1)
+df['count_predicted'] = df['count_predicted'].map(np.expm1)
+
+# Actual Vs Predicted
+plt.plot(df['count'], label='Actual')
+plt.plot(df['count_predicted'], label='Predicted')
+plt.xlabel('Sample')
+plt.ylabel('Count')
+plt.xlim([100, 150])
+plt.title('Validation Dataset - Predicted Vs. Actual')
+plt.legend()
+plt.show()
+
+# Over prediction and Under Prediction needs to be balanced
+# Training Data Residuals
+residuals = (df['count'] - df['count_predicted'])
+
+plt.hist(residuals)
+plt.grid(True)
+plt.xlabel('Actual - Predicted')
+plt.ylabel('Count')
+plt.title('Residuals Distribution')
+plt.axvline(color='r')
+plt.show()
+
+value_counts = (residuals > 0).value_counts(sort=False)
+print(' Under Estimation: {0:.2f}'.format(value_counts[True]/len(residuals)))
+print(' Over  Estimation: {0:.2f}'.format(value_counts[False]/len(residuals)))
+
+print("RMSE: {0:.2f}".format(mean_squared_error(df['count'], df['count_predicted'])**.5))
+
+
+# Metric Use By Kaggle
+def compute_rmsle(y_true, y_pred):
+    if type(y_true) != np.ndarray:
+        y_true = np.array(y_true)
+
+    if type(y_pred) != np.ndarray:
+        y_pred = np.array(y_pred)
+
+    return np.average((np.log1p(y_pred) - np.log1p(y_true)) ** 2) ** .5
+
+
+print("RMSLE: {0:.2f}".format(compute_rmsle(df['count'], df['count_predicted'])))
+
+# Optional Test Data
+# Prepare Data for Submission to Kaggle
+df_test = pd.read_csv(test_file, parse_dates=['datetime'])
+
+X_test = df_test.iloc[:, 1:]  # Exclude datetime for prediction
+
+X_test.head()
+
+# Transform data first with column transformer
+result = nn_regressor.predict(colTransformer.transform(X_test))
+
+# Convert result to actual count
+df_test["count"] = np.expm1(result)
+
+print(df_test.head())
+
+df_test[df_test["count"] < 0]
+
+df_test[['datetime', 'count']].to_csv('predicted_count.csv', index=False)
+
+
 
