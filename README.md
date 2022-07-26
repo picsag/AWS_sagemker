@@ -16,3 +16,5 @@ Click on one of the items below to go to the corresponding Python code:
 [Scikit-learn Multi Layer Perceptron for Regression & Feature Transformer](/DeepLearning/bikerental_NN_sklearn.py)
 
 [A good example of Exploratory Data Analysis using Pandas crosstab for Churn Prediction](/CustomerChurn/customer_churn_data_preparation_onehotencoded.ipynb)
+
+[Classifier for Churn Prediction using Keras Tensorflow](/CustomerChurn/customer_churn_neural_network.ipynb)
