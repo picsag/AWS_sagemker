@@ -20,3 +20,5 @@ Click on one of the items below to go to the corresponding Python code:
 [Classifier for Churn Prediction using Keras Tensorflow](/CustomerChurn/customer_churn_neural_network.ipynb)
 
 [Train and deploy a SkLearn model in AWS Sagemaker providing a custom model script](/BringYourOwn/iris_scikit_learn_training_and_serving.ipynb)
+
+[Train and deploy a Tensorflow model in AWS Sagemaker providing a custom model script](/BringYourOwn/iris_tensorflow_training_and_serving.ipynb)
